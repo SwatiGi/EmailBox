@@ -5,24 +5,30 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import axios from "axios";
 
 const EmailComposer = () => {
+  const [isCompose,setIsCompose] = useState(false)
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+let time = new Date();
+let currentTime = time.toLocaleTimeString([], {
+  hour: '2-digit',
+  minute: '2-digit',
+});
 
   const handleSend = async () => {
     try {
      
-      const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-
+      const content = convertToRaw(editorState.getCurrentContent()).blocks[0];
+      console.log(content)
       let res = await axios.post(
         "https://emailbox-de186-default-rtdb.firebaseio.com/emailData.json",
-        { to, subject, content }
+        { to, subject,content: content.text,time:currentTime  }
       );
 
-      console.log("Response:", res.data);
-      console.log("To:", to);
-      console.log("Subject:", subject);
-      console.log("Body:", content);
+      // console.log("Response:", res.data);
+      // console.log("To:", to);
+      // console.log("Subject:", subject);
+      // console.log("Body:", content);
       alert("Email sent successfully!");
     } catch (error) {
       console.log("Error while posting:", error);
@@ -30,8 +36,8 @@ const EmailComposer = () => {
   };
 
   return (
-    <div className="container my-5" style={{ maxWidth: "800px" }}>
-      <div className="card shadow-sm">
+    <div className="container m-2" style={{ maxWidth: "800px" }}>
+      {!isCompose ? <button className="btn btn-primary px-4" onClick={()=>setIsCompose(!isCompose)}>Compose</button>:  <div className="card shadow-sm">
         <div className="card-header bg-primary text-white">
           <h5 className="mb-0">Compose Email</h5>
         </div>
@@ -89,13 +95,18 @@ const EmailComposer = () => {
           </div>
 
         
-          <div className="text-end mt-3">
+          <div className="text-end mt-3 d-flex justify-content-between">
+            <button className="btn mx-2 btn-primary px-4" onClick={()=>setIsCompose(!isCompose)}>
+              Go back
+            </button>
             <button className="btn btn-primary px-4" onClick={handleSend}>
               Send
             </button>
           </div>
         </div>
-      </div>
+      </div>}
+      
+    
     </div>
   );
 };
