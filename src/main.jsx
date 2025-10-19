@@ -5,7 +5,7 @@ import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 window.global = window;
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+ 
     <App />
-  </StrictMode>,
+  
 )
