@@ -19,6 +19,7 @@ const EmailData = () => {
           ...value,
         }));
         setData(formattedData);
+        getData()
       } else {
         setData([]);
       }
@@ -42,6 +43,16 @@ const EmailData = () => {
   const handleBack = () => {
     setShowEmail(true);
   };
+  const handleDelete = async(id) => {
+    try {
+      let response = await axios.delete(`https://emailbox-de186-default-rtdb.firebaseio.com/emailData/${id}.json`)
+      console.log("Deleted successfully")
+      getData()
+    } catch (error) {
+      console.log("Error in delete",error)
+    }
+
+  }
 
   return (
     <div className="container mt-4">
@@ -54,8 +65,9 @@ const EmailData = () => {
               const isRead = readEmails.includes(item.id);
 
               return (
+                <React.Fragment key={item.id}>
                 <li
-                  key={item.id}
+                  
                   className="list-group-item d-flex justify-content-between align-items-center mb-2 shadow-sm"
                   style={{
                     backgroundColor: isRead ? "#f8f9fa" : "#e7f0ff", 
@@ -96,7 +108,12 @@ const EmailData = () => {
                   >
                     View
                   </button>
-                </li>
+                  </li>
+                  <button
+                    style={{padding:"5px 10px",border:'none',background:"linear-gradient(130deg,lightgreen,lightblue)",borderRadius:"5px",marginBottom:"5px"}} 
+                    onClick={() => handleDelete(item.id)}>Delete</button>
+</React.Fragment>
+                
               );
             })
           ) : (
