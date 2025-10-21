@@ -1,36 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import useFetch from "./useFetch"
 
 const EmailData = () => {
-  const [data, setData] = useState([]);
   const [showEmail, setShowEmail] = useState(true);
   const [emailDataForView, setEmailDataForView] = useState([]);
   const [readEmails, setReadEmails] = useState([]);
   
-  const getData = async () => {
-    try {
-      const response = await axios.get(
-        "https://emailbox-de186-default-rtdb.firebaseio.com/emailData.json"
-      );
-
-      if (response.data) {
-        const formattedData = Object.entries(response.data).map(([id, value]) => ({
-          id,
-          ...value,
-        }));
-        setData(formattedData);
-        getData()
-      } else {
-        setData([]);
-      }
-    } catch (error) {
-      console.log("Error while getting data", error);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  let data = useFetch( "https://emailbox-de186-default-rtdb.firebaseio.com/emailData.json")
 
  
   const handleView = (email) => {

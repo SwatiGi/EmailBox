@@ -24,11 +24,12 @@ let currentTime = time.toLocaleTimeString([], {
         "https://emailbox-de186-default-rtdb.firebaseio.com/emailData.json",
         { to, subject,content: content.text,time:currentTime  }
       );
+        if (!to && !subject && !content) {
+          alert("Please fill all field")
+          return;
+        }
 
-      // console.log("Response:", res.data);
-      // console.log("To:", to);
-      // console.log("Subject:", subject);
-      // console.log("Body:", content);
+      
       alert("Email sent successfully!");
     } catch (error) {
       console.log("Error while posting:", error);
@@ -47,6 +48,7 @@ let currentTime = time.toLocaleTimeString([], {
           <div className="mb-3">
             <label className="form-label fw-semibold">To</label>
             <input
+              required
               type="email"
               className="form-control"
               placeholder="Enter recipient email"
@@ -59,6 +61,7 @@ let currentTime = time.toLocaleTimeString([], {
           <div className="mb-3">
             <label className="form-label fw-semibold">Subject</label>
             <input
+              required
               type="text"
               className="form-control"
               placeholder="Enter subject"
@@ -76,6 +79,7 @@ let currentTime = time.toLocaleTimeString([], {
             >
              
               <Editor
+                required
                 editorState={editorState}
                 onEditorStateChange={setEditorState}
                 toolbar={{
